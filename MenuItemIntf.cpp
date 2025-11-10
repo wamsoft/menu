@@ -20,18 +20,18 @@ static int TextToShortCut( ttstr text ) {
 	text.ToLowerCase();
 
 	int virt = 0;
-	const wchar_t* top  = text.c_str();
-	const wchar_t* tail = top;
-	const wchar_t* ret = NULL;
-	if( (ret = wcsstr( top, L"shift+" )) != NULL ) {
+	const tjs_char* top  = text.c_str();
+	const tjs_char* tail = top;
+	const tjs_char* ret = NULL;
+	if( (ret = wcsstr( top, TJS_W("shift+") )) != NULL ) {
 		virt |= FSHIFT;
 		if( tail < (ret + 6) ) tail = (ret + 6);
 	}
-	if( (ret = wcsstr( top, L"ctrl+" )) != NULL ) {
+	if( (ret = wcsstr( top, TJS_W("ctrl+") )) != NULL ) {
 		virt |= FCONTROL;
 		if( tail < (ret + 5) ) tail = (ret + 5);
 	}
-	if( (ret = wcsstr( top, L"alt+" )) != NULL ) {
+	if( (ret = wcsstr( top, TJS_W("alt+") )) != NULL ) {
 		virt |= FALT;
 		if( tail < (ret + 4) ) tail = (ret + 4);
 	}
@@ -75,8 +75,8 @@ static ttstr MakeCaptionWithShortCut( ttstr const &caption, int key ) {
 	ttstr shortcut( ShortCutToText( key ) );
 	if( shortcut.IsEmpty() ) return caption;
 
-	const wchar_t *text = caption.c_str();
-	const wchar_t *tab  = wcschr( text, L'\t' );
+	const tjs_char *text = caption.c_str();
+	const tjs_char *tab  = TJS_strchr( text, L'\t' );
 	return ( (tab != NULL) ? ttstr( text, (int)(tab-text) ) : ttstr( caption ) ) + TJS_W("\t") + shortcut;
 }
 
@@ -182,7 +182,7 @@ tjs_error TJS_INTF_METHOD tTJSNI_MenuItem::Construct(tjs_int numparams, tTJSVari
 	// fetch initial caption
 	if( !OwnerWindow && numparams >= 2 ) {
 		Caption = *param[1];
-		MenuItem->SetCaption( Caption.c_str() );
+		MenuItem->SetCaption( (const TCHAR*)Caption.c_str() );
 	}
 
 	return S_OK;
